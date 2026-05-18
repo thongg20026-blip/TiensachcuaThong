@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiệm Sách Của Thống - Menu Gọi Món</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --bg-color: #f4f6f7;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            padding-bottom: 100px;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .table-select {
+            margin: 10px auto 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .category-title {
+            margin: 15px 0 10px;
+            font-size: 1.2rem;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 8px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .product-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .product-info p {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-qty {
+            background-color: var(--bg-color);
+            border: 1px solid #ccc;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-qty:active {
+            background-color: #ddd;
+        }
+
+        .qty-num {
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Giỏ hàng phía dưới */
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            max-width: 600px;
+            margin: 0 auto;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .cart-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .cart-info h2 {
+            font-size: 1.3rem;
+        }
+
+        .btn-checkout {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Modal hiển thị QR */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+
+        .qr-img {
+            width: 100%;
+            max-width: 280px;
+            margin: 15px 0;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📚 TIỆM SÁCH CỦA THỐNG 📚</h1>
+        <p style="font-size: 0.9rem; color: #7f8c8d;">Sách cũ - Truyện tranh - Đồ ăn vặt - Photocopy</p>
+        <select id="tableNumber" class="table-select">
+            <option value="Ban 1">Bàn số 1</option>
+            <option value="Ban 2">Bàn số 2</option>
+            <option value="Ban 3">Bàn số 3</option>
+            <option value="Ban 4">Bàn số 4</option>
+            <option value="Ban 5">Bàn số 5</option>
+        </select>
+    </header>
+
+    <div class="container">
+        <div class="category-title">🥤 Nước giải khát</div>
+        <div class="product-card" data-id="sting" data-name="Sting dau" data-price="10000">
+            <div class="product-info">
+                <h3>Sting dâu (Chai lạnh)</h3>
+                <p>10.000 đ</p>
+            </div>
+            <div class="quantity-control">
+                <button class="btn-qty minus">-</button>
+                <span class="qty-num">0</span>
+                <button class="btn-qty plus">+</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-id="coca" data-name="Coca Cola" data-price="10000">
+            <div class="product-info">
+                <h3>Coca Cola (Lon lạnh)</h3>
+                <p>10.000 đ</p>
+            </div>
+            <div class="quantity-control">
+                <button class="btn-qty minus">-</button>
+                <span class="qty-num">0</span>
+                <button class="btn-qty plus">+</button>
+            </div>
+        </div>
+
+        <div class="category-title">🍿 Đồ ăn vặt ăn liền</div>
+        <div class="product-card" data-id="huongduong" data-name="Huong duong" data-price="10000">
+            <div class="product-info">
+                <h3>Hạt hướng dương (Gói)</h3>
+                <p>10.000 đ</p>
+            </div>
+            <div class="quantity-control">
+                <button class="btn-qty minus">-</button>
+                <span class="qty-num">0</span>
+                <button class="btn-qty plus">+</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-id="bimbim" data-name="Bim bim Oishi" data-price="5000">
+            <div class="product-info">
+                <h3>Bim bim Oishi các vị</h3>
+                <p>5.000 đ</p>
+            </div>
+            <div class="quantity-control">
+                <button class="btn-qty minus">-</button>
+                <span class="qty-num">0</span>
+                <button class="btn-qty plus">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-bar">
+        <div class="cart-info">
+            <p id="cart-count">Đang chọn: 0 món</p>
+            <h2 id="cart-total">0 đ</h2>
+        </div>
+        <button class="btn-checkout" onclick="thanhToanQR()">Thanh Toán QR</button>
+    </div>
+
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <span class="btn-close" onclick="dongModal()">&times;</span>
+            <h3 style="color: var(--primary-color);">Quét Mã Bắn Tiền Nhé!</h3>
+            <p style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">Hệ thống tự điền số tiền & nội dung</p>
+            
+            <img id="qrCodeImg" class="qr-img" src="" alt="Mã QR VietQR">
+            
+            <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: left; font-size: 0.9rem;">
+                <p><strong>Chủ TK:</strong> GIANG THONG</p>
+                <p><strong>Ngân hàng:</strong> MB Bank</p>
+                <p><strong>Nội dung:</strong> <span id="txtNoiDung" style="color: var(--accent-color); font-weight:bold;"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cart = {};
+
+        // Lắng nghe sự kiện bấm nút cộng trừ số lượng
+        document.querySelectorAll('.product-card').forEach(card => {
+            const id = card.getAttribute('data-id');
+            const name = card.getAttribute('data-name');
+            const price = parseInt(card.getAttribute('data-price'));
+            const qtyNum = card.querySelector('.qty-num');
+
+            card.querySelector('.plus').addEventListener('click', () => {
+                if (!cart[id]) {
+                    cart[id] = { name: name, price: price, qty: 0 };
+                }
+                cart[id].qty++;
+                qtyNum.innerText = cart[id].qty;
+                capNhatGioHang();
+            });
+
+            card.querySelector('.minus').addEventListener('click', () => {
+                if (cart[id] && cart[id].qty > 0) {
+                    cart[id].qty--;
+                    qtyNum.innerText = cart[id].qty;
+                    if (cart[id].qty === 0) {
+                        delete cart[id];
+                    }
+                    capNhatGioHang();
+                }
+            });
+        });
+
+        // Hàm cập nhật tổng tiền hiển thị dưới thanh giỏ hàng
+        function capNhatGioHang() {
+            let total = 0;
+            let count = 0;
+            for (const id in cart) {
+                total += cart[id].price * cart[id].qty;
+                count += cart[id].qty;
+            }
+            document.getElementById('cart-count').innerText = `Đang chọn: ${count} món`;
+            document.getElementById('cart-total').innerText = total.toLocaleString('vi-VN') + ' đ';
+        }
+
+        // Hàm xử lý tạo mã QR động VietQR khi bấm Thanh Toán
+        function thanhToanQR() {
+            let total = 0;
+            let itemsString = "";
+            
+            for (const id in cart) {
+                total += cart[id].price * cart[id].qty;
+                itemsString += `${cart[id].qty} ${cart[id].name}, `;
+            }
+
+            if (total === 0) {
+                alert("Bạn ơi, bạn chưa chọn món nào vào giỏ hàng kìa!");
+                return;
+            }
+
+            // Xóa bớt dấu phẩy cuối chuỗi danh sách món
+            itemsString = itemsString.replace(/,\s*$/, "");
+
+            const table = document.getElementById('tableNumber').value;
+            // Tạo nội dung chuyển khoản gọn gàng (Ví dụ: Ban 1: 1 Sting dau, 1 Huong duong)
+            const noiDungChuyenKhoan = `${table} ${itemsString}`;
+
+            // Cấu hình thông số VietQR theo ảnh thẻ MB của bạn
+            const BANK_ID = "MB"; 
+            const ACCOUNT_NO = "0878037565";
+            const TEMPLATE = "qr_only"; // Chỉ lấy vùng QR cốt lõi cho sạch giao diện web
+
+            // Link API tự động vẽ QR Code dựa trên thông tin giỏ hàng
+            const apiVietQR = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${total}&addInfo=${encodeURIComponent(noiDungChuyenKhoan)}&accountName=GIANG%20THONG`;
+
+            // Đẩy link ảnh vào Modal và hiển thị lên màn hình
+            document.getElementById('qrCodeImg').src = apiVietQR;
+            document.getElementById('txtNoiDung').innerText = noiDungChuyenKhoan;
+            document.getElementById('qrModal').style.display = 'flex';
+        }
+
+        function dongModal() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
