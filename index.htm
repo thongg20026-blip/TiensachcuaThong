@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiệm Sách Của Thống - Menu Gọi Món</title>
+    <title>Tiệm Sách Của Thống - Đặt Món Online</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
+            --primary-color: #34495e;
             --accent-color: #e74c3c;
-            --bg-color: #f4f6f7;
+            --bg-color: #f4f7f6;
             --card-bg: #ffffff;
+            --text-color: #2c3e50;
         }
 
         * {
@@ -21,32 +22,41 @@
 
         body {
             background-color: var(--bg-color);
-            color: var(--primary-color);
-            padding-bottom: 100px;
+            color: var(--text-color);
+            padding-bottom: 80px; /* Chừa chỗ cho thanh giỏ hàng cố định */
         }
 
         header {
             background-color: var(--card-bg);
             text-align: center;
             padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: var(--primary-color);
             margin-bottom: 5px;
         }
 
+        header p {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .table-select-container {
+            margin-top: 15px;
+        }
+
         .table-select {
-            margin: 10px auto 0;
-            padding: 5px 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+            background: #fff;
             outline: none;
         }
 
@@ -57,55 +67,59 @@
         }
 
         .category-title {
-            margin: 15px 0 10px;
-            font-size: 1.2rem;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 20px 0 10px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
         }
 
         .product-card {
             background: var(--card-bg);
             border-radius: 10px;
             padding: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
 
         .product-info h3 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+            font-size: 1rem;
+            margin-bottom: 4px;
         }
 
         .product-info p {
             color: var(--accent-color);
             font-weight: bold;
+            font-size: 1rem;
         }
 
         .quantity-control {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
         .btn-qty {
-            background-color: var(--bg-color);
-            border: 1px solid #ccc;
-            width: 32px;
-            height: 32px;
+            background-color: #edf2f4;
+            border: none;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             font-size: 1.2rem;
+            color: var(--primary-color);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
 
         .btn-qty:active {
-            background-color: #ddd;
+            background-color: #d1d8dc;
         }
 
         .qty-num {
@@ -115,7 +129,7 @@
             text-align: center;
         }
 
-        /* Giỏ hàng phía dưới */
+        /* Thanh giỏ hàng phía dưới */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -127,31 +141,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             max-width: 600px;
             margin: 0 auto;
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
         }
 
-        .cart-info p {
-            font-size: 0.9rem;
-            opacity: 0.9;
+        .cart-info h2 {
+            font-size: 1.2rem;
         }
 
-        .cart-info h2 {
-            font-size: 1.3rem;
+        .cart-info p {
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
 
         .btn-checkout {
-            background-color: #2ecc71;
+            background-color: var(--accent-color);
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-checkout:active {
+            background-color: #c0392b;
         }
 
         /* Modal hiển thị QR */
@@ -162,27 +181,28 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 20px;
         }
 
         .modal-content {
             background: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             width: 100%;
             max-width: 400px;
             text-align: center;
             position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .qr-img {
             width: 100%;
-            max-width: 280px;
-            margin: 15px 0;
+            max-width: 250px;
+            margin: 20px 0;
         }
 
         .btn-close {
@@ -199,21 +219,23 @@
 
     <header>
         <h1>📚 TIỆM SÁCH CỦA THỐNG 📚</h1>
-        <p style="font-size: 0.9rem; color: #7f8c8d;">Sách cũ - Truyện tranh - Đồ ăn vặt - Photocopy</p>
-        <select id="tableNumber" class="table-select">
-            <option value="Ban 1">Bàn số 1</option>
-            <option value="Ban 2">Bàn số 2</option>
-            <option value="Ban 3">Bàn số 3</option>
-            <option value="Ban 4">Bàn số 4</option>
-            <option value="Ban 5">Bàn số 5</option>
-        </select>
+        <p>Sách cũ - Truyện tranh - Đồ ăn vặt - Photocopy</p>
+        <div class="table-select-container">
+            <select id="tableNumber" class="table-select">
+                <option value="Ban 1">Đang ngồi: Bàn 1</option>
+                <option value="Ban 2">Đang ngồi: Bàn 2</option>
+                <option value="Ban 3">Đang ngồi: Bàn 3</option>
+                <option value="Ban 4">Đang ngồi: Bàn 4</option>
+                <option value="Ban 5">Đang ngồi: Bàn 5</option>
+            </select>
+        </div>
     </header>
 
     <div class="container">
-        <div class="category-title">🥤 Nước giải khát</div>
+        <div class="category-title">🥤 Nước giải khát lạnh</div>
         <div class="product-card" data-id="sting" data-name="Sting dau" data-price="10000">
             <div class="product-info">
-                <h3>Sting dâu (Chai lạnh)</h3>
+                <h3>Sting dâu</h3>
                 <p>10.000 đ</p>
             </div>
             <div class="quantity-control">
@@ -225,7 +247,7 @@
 
         <div class="product-card" data-id="coca" data-name="Coca Cola" data-price="10000">
             <div class="product-info">
-                <h3>Coca Cola (Lon lạnh)</h3>
+                <h3>Coca Cola</h3>
                 <p>10.000 đ</p>
             </div>
             <div class="quantity-control">
@@ -263,32 +285,33 @@
 
     <div class="cart-bar">
         <div class="cart-info">
-            <p id="cart-count">Đang chọn: 0 món</p>
             <h2 id="cart-total">0 đ</h2>
+            <p id="cart-count">Chưa chọn món nào</p>
         </div>
-        <button class="btn-checkout" onclick="thanhToanQR()">Thanh Toán QR</button>
+        <button class="btn-checkout" onclick="thanhToanQR()">ĐẶT MÓN</button>
     </div>
 
     <div id="qrModal" class="modal">
         <div class="modal-content">
             <span class="btn-close" onclick="dongModal()">&times;</span>
             <h3 style="color: var(--primary-color);">Quét Mã Bắn Tiền Nhé!</h3>
-            <p style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">Hệ thống tự điền số tiền & nội dung</p>
+            <p style="font-size: 0.8rem; color: #7f8c8d; margin-top: 5px;">Hệ thống tự điền số tiền và nội dung</p>
             
             <img id="qrCodeImg" class="qr-img" src="" alt="Mã QR VietQR">
             
-            <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: left; font-size: 0.9rem;">
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; text-align: left; font-size: 0.9rem;">
                 <p><strong>Chủ TK:</strong> GIANG THONG</p>
                 <p><strong>Ngân hàng:</strong> MB Bank</p>
                 <p><strong>Nội dung:</strong> <span id="txtNoiDung" style="color: var(--accent-color); font-weight:bold;"></span></p>
             </div>
+            <p style="font-size: 0.8rem; color: #7f8c8d; margin-top: 15px;">Anh Thống sẽ mang đồ ra ngay sau khi nhận được tiền!</p>
         </div>
     </div>
 
     <script>
         const cart = {};
 
-        // Lắng nghe sự kiện bấm nút cộng trừ số lượng
+        // Xử lý sự kiện bấm nút cộng trừ
         document.querySelectorAll('.product-card').forEach(card => {
             const id = card.getAttribute('data-id');
             const name = card.getAttribute('data-name');
@@ -316,7 +339,7 @@
             });
         });
 
-        // Hàm cập nhật tổng tiền hiển thị dưới thanh giỏ hàng
+        // Hàm cập nhật tổng tiền hiển thị
         function capNhatGioHang() {
             let total = 0;
             let count = 0;
@@ -324,11 +347,16 @@
                 total += cart[id].price * cart[id].qty;
                 count += cart[id].qty;
             }
-            document.getElementById('cart-count').innerText = `Đang chọn: ${count} món`;
             document.getElementById('cart-total').innerText = total.toLocaleString('vi-VN') + ' đ';
+            
+            if (count > 0) {
+                document.getElementById('cart-count').innerText = `Đang chọn: ${count} món`;
+            } else {
+                document.getElementById('cart-count').innerText = "Chưa chọn món nào";
+            }
         }
 
-        // Hàm xử lý tạo mã QR động VietQR khi bấm Thanh Toán
+        // Hàm xử lý tạo mã QR động VietQR dựa trên giỏ hàng
         function thanhToanQR() {
             let total = 0;
             let itemsString = "";
@@ -339,26 +367,24 @@
             }
 
             if (total === 0) {
-                alert("Bạn ơi, bạn chưa chọn món nào vào giỏ hàng kìa!");
+                alert("Bạn ơi, bạn chưa chọn món nào mà!");
                 return;
             }
 
-            // Xóa bớt dấu phẩy cuối chuỗi danh sách món
-            itemsString = itemsString.replace(/,\s*$/, "");
-
+            // Gọn gàng nội dung chuyển khoản (Ví dụ: Ban 1: 1 Sting dau, 1 Huong duong)
+            itemsString = itemsString.replace(/,\s*$/, ""); // Xóa dấu phẩy cuối
             const table = document.getElementById('tableNumber').value;
-            // Tạo nội dung chuyển khoản gọn gàng (Ví dụ: Ban 1: 1 Sting dau, 1 Huong duong)
             const noiDungChuyenKhoan = `${table} ${itemsString}`;
 
-            // Cấu hình thông số VietQR theo ảnh thẻ MB của bạn
+            // Cấu hình mã QR ngân hàng MB của bạn
             const BANK_ID = "MB"; 
             const ACCOUNT_NO = "0878037565";
-            const TEMPLATE = "qr_only"; // Chỉ lấy vùng QR cốt lõi cho sạch giao diện web
+            const TEMPLATE = "qr_only"; // Chỉ lấy mã QR cốt lõi
 
-            // Link API tự động vẽ QR Code dựa trên thông tin giỏ hàng
+            // Gọi API VietQR để tự vẽ ảnh
             const apiVietQR = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${total}&addInfo=${encodeURIComponent(noiDungChuyenKhoan)}&accountName=GIANG%20THONG`;
 
-            // Đẩy link ảnh vào Modal và hiển thị lên màn hình
+            // Hiển thị mã QR lên màn hình
             document.getElementById('qrCodeImg').src = apiVietQR;
             document.getElementById('txtNoiDung').innerText = noiDungChuyenKhoan;
             document.getElementById('qrModal').style.display = 'flex';
